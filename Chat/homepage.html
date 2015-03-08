@@ -1,0 +1,49 @@
+<html>
+ <head>
+  	<title> Homepage </title>
+	<link rel = "stylesheet" type = "text/css" href= "style.css">
+<script  type="text/javascript" src="todo.js"></script>	
+ </head>
+   
+<body topmargin = "50" leftmargin = "100"  bgcolor = "orchid" onload = "run();">
+   
+  <labe> Enter your name </label>
+   <input target = "Name" id = "Name"> 
+  <input id="editName" type = "button" value = "Edit" onclick = "edit()">
+     <br>
+ 
+    <Server>
+       	
+   	<input type = "radio" name = "server" checked > server is available 
+	</Server> 
+      <br>
+    <Server> 
+	<input type = "radio" name = "server" > server is unavailable
+	    </Server> 
+ 
+ 	<div class = "Text">
+      
+	<textarea id = "Show"cols = "130" rows = "12" readonly >
+	</textarea>
+	<input id = "addButton" class= "buttonAdd"type = "button" value = "Send" onclick = "isEmail()">
+	  
+ 		<textarea id = "todoText"cols = "130" rows ="5">
+           </textarea>
+		 
+       
+   </div>
+	
+      <br>
+      <Button>
+	 <input type = "button" value = "Delete">
+
+	</Button>
+<br> 
+
+
+   
+</body>
+  
+</html>
+
+
