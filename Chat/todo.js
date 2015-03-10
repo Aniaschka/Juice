@@ -9,6 +9,7 @@ function run(){
         }
 
 function isEmail(){
+	/*JS naming notation issue. variable names must be started with lower case char*/
 	var Text =    document.getElementById('todoText');
     var Show = document.getElementById('Show');
     Show.value = Show.value + "\n"+               Text.value;
