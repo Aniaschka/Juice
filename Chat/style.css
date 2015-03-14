@@ -1,0 +1,34 @@
+<body{}
+Button{
+ position: absolute;
+ left:15%;
+ top: 75%;
+ color: red;
+}
+Server{
+  position: absolute;
+  right: 12%;
+  background-color: #8DF1F5;
+}
+#Rectangle{ 
+   position: absolute;
+   width:950px;
+   height:250px;
+   background:LightBlue;
+}
+#Text{
+  position: absolute;
+  width:950px;
+  top:55%;
+  
+
+}
+#Statistics{
+   position: absolute;
+   width:200px;
+   height:100px;
+   background:LightBlue;
+   top: 75%;
+   right:15;
+}
+
