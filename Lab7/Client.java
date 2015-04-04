@@ -8,14 +8,16 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Client implements Runnable {
 
-    private List<String> history = new ArrayList<String>();
+    private List<Message> history = new ArrayList<Message>();
     private MessageExchange messageExchange = new MessageExchange();
     private String host;
     private Integer port;
+    private String user =  "User " + (new Random()).nextInt(50);
 
     public Client(String host, Integer port) {
         this.host = host;
@@ -42,8 +44,8 @@ public class Client implements Runnable {
         return (HttpURLConnection) url.openConnection();
     }
 
-    public List<String> getMessages() {
-        List<String> list = new ArrayList<String>();
+    public List<Message> getMessages() {
+        List<Message> list = new ArrayList<Message>();
         HttpURLConnection connection = null;
         try {
             connection = getHttpURLConnection();
@@ -52,8 +54,9 @@ public class Client implements Runnable {
             JSONObject jsonObject = messageExchange.getJSONObject(response);
             JSONArray jsonArray = (JSONArray) jsonObject.get("messages");
             for (Object o : jsonArray) {
-                System.out.println(o);
-                list.add(o.toString());
+                Message data = Message.parseMessage((JSONObject)o);
+                System.out.println(data.toString());
+                list.add(data);
             }
         } catch (IOException e) {
             System.err.println("ERROR: " + e.getMessage());
@@ -68,7 +71,7 @@ public class Client implements Runnable {
         return list;
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(Message message) {
         HttpURLConnection connection = null;
         try {
             connection = getHttpURLConnection();
@@ -96,7 +99,7 @@ public class Client implements Runnable {
 
     public void listen() {
         while (true) {
-            List<String> list = getMessages();
+            List<Message> list = getMessages();
 
             if (list.size() > 0) {
                 history.addAll(list);
@@ -116,8 +119,9 @@ public class Client implements Runnable {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            String message = scanner.nextLine();
-            sendMessage(message);
+            String tmp = scanner.nextLine();
+            Message m = new Message(tmp,user);
+            sendMessage(m);
         }
     }
 }

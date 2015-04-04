@@ -12,33 +12,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 public class Server implements HttpHandler {
-    private List<String> history = new ArrayList<String>();
+    private List<Message> history = new ArrayList<Message>();
     private MessageExchange messageExchange = new MessageExchange();
-    Request request;
-    class Request{
-        String message;
-        String user;
-        String id;
-        public Request(){}
-        public String getId() {return id;}
-        public String getMessage() {return message;}
-        public String getUser() {return user;}
-        public void getRequest(String temp){
-            String tmp = temp;
-            StringTokenizer tok = new StringTokenizer(tmp ,", {}:");
-            tok.nextToken();
-            id = tok.nextToken();
-            tok.nextToken();
-            user = tok.nextToken();
-            tok.nextToken();
-            message = tok.nextToken();
-
-    }
-    }
-    private Integer id = 1;
+    
+    
     public static void main(String[] args) {
         if (args.length != 1)
             System.out.println("Usage: java Server port");
@@ -59,6 +38,39 @@ public class Server implements HttpHandler {
                 System.out.println("Error creating http server: " + e);
             }
         }
+    }
+     private void doDelete(HttpExchange httpExchange) {
+    	String query = httpExchange.getRequestURI().getQuery();
+    	if(query != null) {
+    		 Map<String, String> map = queryToMap(query);
+    		 String token = map.get("token");
+    		 int index = -1;
+    		 if (token != null && !"".equals(token)) {
+                  index = messageExchange.getIndex(token);
+    		 }
+    		 if(index != -1) {
+    		 Message message = history.get(index);
+    		 String messageForDelete = message.getMessage();
+    		 message.deleteMessage();
+    		 System.out.println("Delete Message : " + message.getUser() + " : " + messageForDelete);
+    		 }
+    	}
+     }
+     private void doPut(HttpExchange httpExchange) {
+
+        try{
+    	Message messageChange = messageExchange.getClientMessage(httpExchange.getRequestBody());
+    	int idOfChangeMessage =  messageChange.getId();
+    	if(idOfChangeMessage >= 0 && idOfChangeMessage < history.size()) {
+    		Message message = history.get(idOfChangeMessage);
+    		message.setMessage(messageChange.getMessage());
+    		message.setChange(true);
+        }
+        }
+        catch (ParseException e) {
+        System.err.println("Invalid user message: " + httpExchange.getRequestBody() + " " + e.getMessage());
+       	}
+
     }
 
     @Override
@@ -93,18 +105,15 @@ public class Server implements HttpHandler {
 
     private void doPost(HttpExchange httpExchange) {
         try {
-            Request request = new Request();
-            request.getRequest(messageExchange.getClientMessage(httpExchange.getRequestBody()));
-            System.out.println("id : " +request.getId());
-            System.out.println(" user : " + request.getUser());
-            System.out.println(" message : " + request.getMessage());
-           // history.add(message);
+            Message message = messageExchange.getClientMessage(httpExchange.getRequestBody());
+            System.out.println("Get Message from User : " + message);
+            history.add(message);
         } catch (ParseException e) {
             System.err.println("Invalid user message: " + httpExchange.getRequestBody() + " " + e.getMessage());
         }
     }
 
-    private void sendResponse(HttpExchange httpExchange, String response) {
+    private void sendResponse(HttpExchange httpExchange,String response) {
         try {
             byte[] bytes = response.getBytes();
             Headers headers = httpExchange.getResponseHeaders();

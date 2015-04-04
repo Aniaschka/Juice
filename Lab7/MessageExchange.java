@@ -4,11 +4,11 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.util.List;
-import java.util.StringTokenizer;
 
 public class MessageExchange {
 
     private JSONParser jsonParser = new JSONParser();
+
     public String getToken(int index) {
         Integer number = index * 8 + 11;
         return "TN" + number + "EN";
@@ -18,23 +18,27 @@ public class MessageExchange {
         return (Integer.valueOf(token.substring(2, token.length() - 2)) - 11) / 8;
     }
 
-    public String getServerResponse(List<String> messages) {
+    public String getServerResponse(List<Message> messages) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("messages", messages);
         jsonObject.put("token", getToken(messages.size()));
         return jsonObject.toJSONString();
     }
 
-    public String getClientSendMessageRequest(String message) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", message);
-        return jsonObject.toJSONString();
+    public String getClientSendMessageRequest(Message message) {
+        return message.toJSONString();
     }
 
-    public String getClientMessage(InputStream inputStream) throws ParseException {
-              return (String) getJSONObject(inputStreamToString(inputStream)).get("message");
+    public Message getClientMessage(InputStream inputStream) throws ParseException {
+        JSONObject tmp = (JSONObject)getJSONObject(inputStreamToString(inputStream));
+		System.out.println(tmp);
+        return Message.parseMessage(tmp);
     }
+    public void getMessageId(InputStream inputStream) throws ParseException {
+		System.out.println((JSONObject)getJSONObject(inputStreamToString(inputStream)).get("id"));
+             }
     
+
     public JSONObject getJSONObject(String json) throws ParseException {
         return (JSONObject) jsonParser.parse(json.trim());
     }
