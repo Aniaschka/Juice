@@ -10,25 +10,23 @@ Server{
   right: 12%;
   background-color: #8DF1F5;
 }
-#Rectangle{ 
-   position: absolute;
-   width:950px;
-   height:250px;
-   background:LightBlue;
+
+#block2 {
+    overflow-y: auto;
+    white-space: nowrap; 
+    background-color: #8DF1F5;
+    position: fixed;
+    width:850px;
+    height: 50%;
+    top: 15%;
+    left: 15%;
 }
 #Text{
   position: absolute;
-  width:950px;
-  top:55%;
-  
+  width:850px;
+  top:65%;
+  left: 15%;
 
 }
-#Statistics{
-   position: absolute;
-   width:200px;
-   height:100px;
-   background:LightBlue;
-   top: 75%;
-   right:15;
-}
+
 

@@ -1,96 +1,102 @@
-var userName = [];
+var currName;
 var MessageList = [];
 var count = 0;
-var amount = 0;
-var amountOfMes = [];
 var totalCount = 0;
 function run(){
-   var Store = restore();
-   recreate(Store);
-   var Name = restoreName();
-   var Amount = restoreAmount();
-   writeStatistics(Name,Amount);
-   var message = document.getElementById('todoText');
-   if(!isEmpty(message.value)){
-   isEmail();
-   }
-  
+   var array = restore() || [];
+   createAll(array);
+   
         }
-function isEmpty(str) {
-return (!/S/.test(str));
+function theMessage(message, nick, id) {
+    return {
+        description: message,
+        nameId: nick,
+        id: id
+    };
+}
+
+function uniqueId() {
+    var date = Date.now();
+    var random = Math.random() * Math.random();
+    return Math.floor(date * random).toString();
 }
 
 function isEmail(){
       var Text =    document.getElementById('todoText');
-      var  Rectangle  = document.getElementById('Rectangle');
-      var Show = document.createElement('textarea');
-      Show.value = Text.value;
-      MessageList[totalCount++] = Text.value;
-      amount++;
+      var  Rectangle  = document.getElementById('block2');
+      var div = document.createElement('div');
+      div.innerHTML =  currName +': '+ Text.value;
+      div.setAttribute("onclick", 'select(this)');
+      div.id = uniqueId();
+	div.description = Text.value;
+	div.nameId = currName;
+      MessageList.push(theMessage(Text.value,currName, div.id));
       store(MessageList);
-      Rectangle.appendChild(Show);
+      Rectangle.appendChild(div);
       Text.value = '';
 }  
+function select(elem) {
+    if (elem.style.color == 'black') {
+        elem.style.background = 'LightSlateGray';
+        elem.style.color = 'red';
+    }
+     else {
+        elem.style.background = 'Cornsilk';
+        elem.style.color = 'black';
+    }
+}
+function Delete() {
+      var children = document.getElementById('block2').childNodes;
+        var count = 0;
+    for (var i = 0; i < children.length; i++) {
+        if (children[i].style.color == 'red') {
+            var deleteDiv = children[i];
+            remove(deleteDiv);
+        }
+    }
+    
+    
+    
+}
 function edit(){
 	var Text = document.getElementById('Name');
        	Text.value = '';   
 }
+function remove(elem) {
+    var parentElement = elem.parentNode;
+    parentElement.removeChild(elem);
+}
 function save(){
-	var Text =    document.getElementById('Name');
-        userName[count] = Text.value;
-	amountOfMes[count++] = amount;
-        amount = 0; 
-       	storeName(userName);
-        storeAmount(amountOfMessage);
+	var Text = document.getElementById('Name');
+       	currName = Text.value;
+	
 }
 function store(listToSave) {
-		
-	localStorage.setItem("taskList", JSON.stringify(listToSave));
-}
-function storeAmount(listToSave) {
-		
-	localStorage.setItem("Amount", JSON.stringify(listToSave));
-}
-function storeName(listToSave) {
-		
-	localStorage.setItem("Name", JSON.stringify(listToSave));
+      if (typeof (Storage) == "undefined") {
+        return;
+    }
+    localStorage.setItem("aNN", JSON.stringify(listToSave));
 }
 function restore() {
-	if(typeof(Storage) == "undefined") {
-		alert('localStorage is not accessible');
-		return;
-	}
+    if (typeof (Storage) == "undefined") {
+        return;
+    }
 
-	var item = localStorage.getItem("taskList");
-	return item && JSON.parse(item);
+    var item = localStorage.getItem("aNN");
+    return item && JSON.parse(item);
 }
-function restoreName(){
- 	var item = localStorage.getItem("Name");
-	return item && JSON.parse(item);
+function createAll(arr) {
+    var parentElem = document.getElementById('block2');
+    for (var i = 0; i < arr.length; i++) {
+        var div = document.createElement('div');
+        div.setAttribute("onclick", 'select(this)');
+        div.id = arr[i].id;
+        div.nameId = arr[i].nameId;
+        div.description = arr[i].description;
+        div.innerHTML = div.nameId + ': ' + div.description;
+        parentElem.appendChild(div);
+        MessageList.push(arr[i]);
+        document.getElementById('Name').value = arr[arr.length - 1].nameId;
+    }
+}
 
-}
-function restoreAmount(){
- 	var item = localStorage.getItem("Amount");
-	return item && JSON.parse(item);
-
-}
-
-function recreate(Store){
-        var  Rectangle  = document.getElementById('Rectangle');
-	for(var i=0; i<Store.length; i++)
-	{
-	var Show = document.createElement('textarea');
-        Show.value = Store[i];
-	Rectangle.appendChild(Show);
-	}
-
-}
-function writeStatistics(name,amount){
-	var Text = document.createElement('textarea');
-        var  Rectangle  = document.getElementById('Statistics');
-        for(var i =0; i <name.length; i++){
-           Text.value = name[i];
-            }
-        count = 0;
-        Rectangle.appendChild(Text);
-}

@@ -6,27 +6,22 @@
  </head>
    
 <body topmargin = "50" leftmargin = "100"  bgcolor = "orchid" onload = "run();">
-   <div class = "todos">
+   
   <labe> Enter your name </label>
    <input target = "Name" id = "Name"> 
   <input id="editName" type = "button" value = "Edit" onclick = "edit()">
 <input id="saveName" type = "button" value = "Save" onclick = "save()">
      <br>
- 
+ <div id="block2"></div>
     <Server>
-       	
-   	<input type = "radio" name = "server" checked > server is available 
+       	<input type = "radio" name = "server" checked > server is available 
 	</Server> 
       <br>
     <Server> 
 	<input type = "radio" name = "server" > server is unavailable
 	    </Server> 
- 
- 	      
-	
- 	<div id = "Rectangle" > </div>
-       <div id = "Statistics" > Last User</div>
-<br>
+  	    
+       <br>
 		  <br> <br>
  <div id = "Text" > 
  		<textarea id = "todoText"cols = "130" rows ="5">
@@ -34,14 +29,13 @@
          	
       <br>
       <Button>
-<input type = "button" class = "btn-delete"value = "Delete">
+<input type = "button"  value = "Delete" onclick = "Delete()">
 <input id = "addButton" class= "buttonAdd"type = "button" value = "Send" onclick = "isEmail()"> 
 	</Button>
 <br> 
 
 
- </div>  
-</body>
+ </body>
   
 </html>
 
